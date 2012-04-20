@@ -1,0 +1,20 @@
+#!/usr/bin/env php
+<?php
+
+define('BEHAT_PHP_BIN_PATH', '/usr/bin/env php');
+define('BEHAT_BIN_PATH', __FILE__);
+define('BEHAT_VERSION', 'DEV');
+define('BEHAT_SAUCE_VERSION', 'DEV');
+
+if (is_dir(__DIR__ . '/../vendor')) {
+    require_once __DIR__ . '/../vendor/.composer/autoload.php';
+} elseif (is_file(__DIR__ . '/../../../.composer/autoload.php')) {
+    require_once __DIR__ . '/../../../.composer/autoload.php';
+} elseif (is_file(__DIR__ . '/../.composer/autoload.php')) {
+    require_once __DIR__ . '/../.composer/autoload.php';
+} else {
+    require_once 'behat/autoload.php';
+}
+
+$app = new Behat\Sauce\Console\SauceApplication(BEHAT_SAUCE_VERSION);
+$app->run();
