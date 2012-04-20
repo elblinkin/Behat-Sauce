@@ -7,7 +7,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface,
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface;
 
-use Behat\Behat\Locator;
+use Behat\Behat\PathLocator;
+use Behat\Behat\Console\Processor as Behat;
 
 /**
  * Init operation processor.
@@ -15,16 +16,16 @@ use Behat\Behat\Locator;
  * @author LB Denker <lb@elblinkin.info>
  */
 class InitProcessor
-extends Behat\Behat\Console\Processor\InitProcessor {
+extends Behat\InitProcessor {
 
     /**
      * {@inheritDoc}
      */
-    protected function initFeatureDirectoryStructure(
+    protected function initFeaturesDirectoryStructure(
     	PathLocator $locator,
     	OutputInterface $output
     ) {
-    	parent::initFeatureDirectoryStructure($locator, $output);
+    	parent::initFeaturesDirectoryStructure($locator, $output);
     	$base_path = realpath($locator->getWorkPath()) . DIRECTORY_SEPARATOR;
     	$config_path = $base_path . 'config';
     	if (!is_dir($config_path)) {
@@ -61,21 +62,19 @@ use Behat\Behat\Context\ClosuredContextInterface,
     Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
-use Behat\Sauce\Conext\SauceContext;
+use Behat\Sauce\Context\SauceContext;
 
 /**
  * Features context.
  */
-class FeatureContext extends SauceContext
-{
+class FeatureContext extends SauceContext {
     /**
      * Initializes context.
      * Every scenario gets it's own context object.
      *
      * @param   array   $parameters     context parameters (set them up through behat.yml)
      */
-    public function __construct(array $parameters)
-    {
+    public function __construct(array $parameters) {
         parent::__construct($parameters);
     }
 
@@ -85,8 +84,7 @@ class FeatureContext extends SauceContext
 //    /**
 //     * @Given /^I have done something with "([^"]*)"$/
 //     */
-//    public function iHaveDoneSomethingWith($argument)
-//    {
+//    public function iHaveDoneSomethingWith($argument) {
 //        doSomethingWith($argument);
 //    }
 //
@@ -100,13 +98,13 @@ PHP;
 default:
     paths:
         features: 'features'
-        bootstrap: '%behat.paths.features%/boostrap'
+        bootstrap: '%behat.paths.features%/bootstrap'
     context:
         class: 'FeatureContext'
-            parameters:
-                username: 'sauce-user'
-                access_key: 'access-key'
-                base_url: 'http://localhost/'
-    	YAML;
+        parameters:
+            username: 'sauce-user'
+            access_key: 'access-key'
+            base_url: 'http://localhost/'
+YAML;
     }
 }

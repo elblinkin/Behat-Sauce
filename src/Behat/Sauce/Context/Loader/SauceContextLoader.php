@@ -2,6 +2,11 @@
 
 namespace Behat\Sauce\Context\Loader;
 
+use Behat\Behat\Context\ContextInterface,
+    Behat\Behat\Context\Loader\ContextLoaderInterface;
+
+use Behat\Sauce\Context\SauceContext;
+
 class SauceContextLoader implements ContextLoaderInterface {
 
 	private $browser;

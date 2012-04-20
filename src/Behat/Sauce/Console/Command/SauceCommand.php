@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder,
     Symfony\Component\Console\Input\InputArgument,
     Symfony\Component\Console\Output\OutputInterface;
 
+use Behat\Behat\Console\Command\BaseCommand;
 use Behat\Behat\Console\Input\InputDefinition;
 use Behat\Behat\Console\Processor as Behat;
 use Behat\Sauce\Console\Processor as Sauce;
@@ -27,19 +28,19 @@ class SauceCommand extends BaseCommand {
 	protected function configure() {
 		$this->container = new ContainerBuilder();
 		$this
-		    ->setName('behat')
+		    ->setName('behat-sauce')
 		    ->setDefinition(new InputDefinition)
 		    ->setProcessors(
 		    	array(
 		    	    new Behat\ContainerProcessor(),
 		    	    new Behat\LocatorProcessor(),
 			    	new Sauce\InitProcessor(),
+			    	new Sauce\SauceProcessor(),
 			    	new Behat\ContextProcessor(),
 			    	new Behat\FormatProcessor(),
-			    	new Sauce\HelpProcessor(),
+			    	new Behat\HelpProcessor(),
 			    	new Behat\GherkinProcessor(),
-			    	new Sauce\SauceProcessor(),
-			    	new Behat\RunProcess(),
+			    	new Behat\RunProcessor(),
 		        )
 		    )
 		    ->addArgument(

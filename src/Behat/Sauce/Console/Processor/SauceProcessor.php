@@ -1,8 +1,19 @@
 <?php
 
+namespace Behat\Sauce\Console\Processor;
+
+use Symfony\Component\DependencyInjection\ContainerInterface,
+    Symfony\Component\Console\Command\Command,
+    Symfony\Component\Console\Input\InputInterface,
+    Symfony\Component\Console\Input\InputOption,
+    Symfony\Component\Console\Output\OutputInterface;
+
+use Behat\Behat\Console\Processor\ProcessorInterface;
+use Behat\Sauce\Context\Loader\SauceContextLoader;
+
 class SauceProcessor implements ProcessorInterface {
 	
-	public function configuration(Command $command) {
+	public function configure(Command $command) {
 	    $command
 	        ->addOption(
 	        	'--browser', null, InputOption::VALUE_REQUIRED,
