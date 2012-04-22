@@ -20,33 +20,33 @@ use Behat\Sauce\Console\Processor as Sauce;
 class SauceCommand extends BaseCommand {
 
     /** @var Symfony\Component\DependencyInjection\ContainerBuilder */
-	private $container;
+    private $container;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function configure() {
-		$this->container = new ContainerBuilder();
-		$this
-		    ->setName('behat-sauce')
-		    ->setDefinition(new InputDefinition)
-		    ->setProcessors(
-		    	array(
-		    	    new Behat\ContainerProcessor(),
-		    	    new Behat\LocatorProcessor(),
-			    	new Sauce\InitProcessor(),
-			    	new Sauce\SauceProcessor(),
-			    	new Behat\ContextProcessor(),
-			    	new Behat\FormatProcessor(),
-			    	new Behat\HelpProcessor(),
-			    	new Behat\GherkinProcessor(),
-			    	new Behat\RunProcessor(),
-		        )
-		    )
-		    ->addArgument(
-		    	'features',
-		    	InputArgument::OPTIONAL,
-		    	"Feature(s) to run. Could be:\n"
+    /**
+     * {@inheritDoc}
+     */
+    protected function configure() {
+        $this->container = new ContainerBuilder();
+        $this
+            ->setName('behat-sauce')
+            ->setDefinition(new InputDefinition)
+            ->setProcessors(
+                array(
+                    new Behat\ContainerProcessor(),
+                    new Behat\LocatorProcessor(),
+                    new Sauce\InitProcessor(),
+                    new Sauce\SauceProcessor(),
+                    new Behat\ContextProcessor(),
+                    new Behat\FormatProcessor(),
+                    new Behat\HelpProcessor(),
+                    new Behat\GherkinProcessor(),
+                    new Behat\RunProcessor(),
+                )
+            )
+            ->addArgument(
+                'features',
+                InputArgument::OPTIONAL,
+                "Feature(s) to run. Could be:\n"
                     . "- a dir <comment>(features/)</comment>\n"
                     . "- a feature <comment>(*.feature)</comment>\n"
                     . "- a scenario at specific line <comment>(*.feature:10)</comment>.\n"
@@ -54,22 +54,22 @@ class SauceCommand extends BaseCommand {
                     . "- all scenarios at a line within a specific range <comment>(*.feature:10-20)</comment>."
             )
             ->configureProcessors();
-	}
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function getContainer() {
-		return $this->container;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    protected function getContainer() {
+        return $this->container;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function execute(
-		InputInterface $input,
-		OutputInterface $output
-	) {
+    /**
+     * {@inheritDoc}
+     */
+    protected function execute(
+        InputInterface $input,
+        OutputInterface $output
+    ) {
         $this->getContainer()->get('behat.runner')->runSuite();
-	}
+    }
 }

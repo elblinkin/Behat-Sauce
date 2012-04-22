@@ -12,27 +12,27 @@ use InvalidArgumentException;
 
 class SauceContext extends BaseMinkContext {
 
-	private static $mink;
-	private $parameters;
+    private static $mink;
+    private $parameters;
 
-	public function __construct(
-		array $parameters
-	) {
-		$this->parameters = $parameters;
-		if (!array_key_exists('show_cmd', $this->parameters)) {
+    public function __construct(
+        array $parameters
+    ) {
+        $this->parameters = $parameters;
+        if (!array_key_exists('show_cmd', $this->parameters)) {
             $this->parameters['show_cmd'] = $this->getDefaultShowCmd();
-		}
-		if (!array_key_exists('show_tmp_dir', $this->parameters)) {
-			$this->parameters['show_tmp_dir'] = sys_get_temp_dir();
-		}
-	}
+        }
+        if (!array_key_exists('show_tmp_dir', $this->parameters)) {
+            $this->parameters['show_tmp_dir'] = sys_get_temp_dir();
+        }
+    }
 
     /**
      * {@inheritDoc}
      */
     public function getMink() {
         if (self::$mink === null) {
-        	self::$mink = new Mink();
+            self::$mink = new Mink();
         }
         return self::$mink;
     }
@@ -48,9 +48,9 @@ class SauceContext extends BaseMinkContext {
      * {@inheritDoc}
      */
     public function getParameter($name) {
-    	return isset($this->parameters[$name])
-    	    ? $this->parameters[$name]
-    	    : null;
+        return isset($this->parameters[$name])
+            ? $this->parameters[$name]
+            : null;
     }
 
     /**
@@ -63,40 +63,40 @@ class SauceContext extends BaseMinkContext {
      * @param os SauceLabs operating system
      */
     public function initialize(
-    	$browser,
-    	$version,
-    	$os
+        $browser,
+        $version,
+        $os
     ) {
-    	$mink = $this->getMink();
+        $mink = $this->getMink();
         if (!$mink->hasSession('selenium')) {
-        	$host = $this->getParameter('host');
-        	$port = $this->getParameter('port');
-        	$username = $this->getParameter('username');
-        	if ($username === null) {
-        		throw new InvalidArgumentException('Must set "username" in behat.yml');
-        	}
-        	$access_key = $this->getParameter('access_key');
-        	if ($access_key === null) {
-        		throw new InvalidArgumentException('Must set "access_key" in behat.yml');
-        	}
-        	$mink->registerSession(
-        	    'selenium',
-        	    new Session(
-        	    	new SeleniumDriver(
-        	    		array(
-        	    	        'username' => $username,
-			                'access-key' => $access_key,
-			                'browser' => isset($browser) ? $browser : 'firefox',
-			                'browser-version' => isset($browser_version) ? $browser_version : '7',
-			                'os' => isset($os) ? $os : 'Windows 2003',
-        	            ),
-        	            $this->getParameter('base_url'),
-        	            new SeleniumClient(
-        	    	        isset($host) ? $host : 'ondemand.saucelabs.com',
-        	    	        isset($port) ? $port : '80'
-        	            )
-        	        )
-        	    )
+            $host = $this->getParameter('host');
+            $port = $this->getParameter('port');
+            $username = $this->getParameter('username');
+            if ($username === null) {
+                throw new InvalidArgumentException('Must set "username" in behat.yml');
+            }
+            $access_key = $this->getParameter('access_key');
+            if ($access_key === null) {
+                throw new InvalidArgumentException('Must set "access_key" in behat.yml');
+            }
+            $mink->registerSession(
+                'selenium',
+                new Session(
+                    new SeleniumDriver(
+                        array(
+                            'username' => $username,
+                            'access-key' => $access_key,
+                            'browser' => isset($browser) ? $browser : 'firefox',
+                            'browser-version' => isset($browser_version) ? $browser_version : '7',
+                            'os' => isset($os) ? $os : 'Windows 2003',
+                        ),
+                        $this->getParameter('base_url'),
+                        new SeleniumClient(
+                            isset($host) ? $host : 'ondemand.saucelabs.com',
+                            isset($port) ? $port : '80'
+                        )
+                    )
+                )
             );
         }
     }
@@ -106,9 +106,9 @@ class SauceContext extends BaseMinkContext {
      * @BeforeScenario
      */
     public function prepareMinkSessions($event) {
-    	$scenario = $event instanceof ScenarioEvent 
-    	    ? $event->getScenario()
-    	    : $event->getOutline();
+        $scenario = $event instanceof ScenarioEvent 
+            ? $event->getScenario()
+            : $event->getOutline();
         
         if ($scenario->hasTag('insulated')) {
             $this->getMink()->stopSessions();

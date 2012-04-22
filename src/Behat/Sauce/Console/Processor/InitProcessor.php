@@ -22,39 +22,39 @@ extends Behat\InitProcessor {
      * {@inheritDoc}
      */
     protected function initFeaturesDirectoryStructure(
-    	PathLocator $locator,
-    	OutputInterface $output
+        PathLocator $locator,
+        OutputInterface $output
     ) {
-    	parent::initFeaturesDirectoryStructure($locator, $output);
-    	$base_path = realpath($locator->getWorkPath()) . DIRECTORY_SEPARATOR;
-    	$config_path = $base_path . 'config';
-    	if (!is_dir($config_path)) {
+        parent::initFeaturesDirectoryStructure($locator, $output);
+        $base_path = realpath($locator->getWorkPath()) . DIRECTORY_SEPARATOR;
+        $config_path = $base_path . 'config';
+        if (!is_dir($config_path)) {
             mkdir($config_path, 0777, true);
             $output->writeln(
-            	sprintf(
-            		'<info>+d</info> %s <comment>- edit you config settings here</comment>',
-            		str_replace($base_path, '', $config_path)
-            	)
+                sprintf(
+                    '<info>+d</info> %s <comment>- edit you config settings here</comment>',
+                    str_replace($base_path, '', $config_path)
+                )
             );
 
             file_put_contents(
-            	$config_path . DIRECTORY_SEPARATOR . 'behat.yml',
-            	$this->getConfigSkelet()
+                $config_path . DIRECTORY_SEPARATOR . 'behat.yml',
+                $this->getConfigSkelet()
             );
             $output->writeln(
-            	sprintf(
-            		'<info>+f</info> %sbehat.yml <comment>- place your feature related code here</comment>',
-            		str_replace($base_path, '', $config_path)
-            	)
+                sprintf(
+                    '<info>+f</info> %sbehat.yml <comment>- place your feature related code here</comment>',
+                    str_replace($base_path, '', $config_path)
+                )
             );
-    	}
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     protected function getFeatureContextSkelet() {
-    	return <<<'PHP'
+        return <<<'PHP'
 <?php
 
 use Behat\Behat\Context\ClosuredContextInterface,
@@ -94,7 +94,7 @@ PHP;
     }
 
     protected function getConfigSkelet() {
-    	return <<<'YAML'
+        return <<<'YAML'
 default:
     paths:
         features: 'features'
