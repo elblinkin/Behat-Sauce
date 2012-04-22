@@ -91,10 +91,10 @@ class SauceContext extends BaseMinkContext {
                 }',
                 $username,
                 $access_key,
-                ($browser === null) ? $browser : 'firefox',
-                ($version === null) ? $version : '7',
-                ($os === null) ? $os : 'Windows 2003',
-                ($name === null) ? $name : 'BeHat-Sauce Test'
+                ($browser !== null) ? $browser : 'firefox',
+                ($version !== null) ? $version : '7',
+                ($os !== null) ? $os : 'Windows 2003',
+                ($name !== null) ? $name : 'BeHat-Sauce Test'
             );
 
             $mink->registerSession(
