@@ -26,10 +26,10 @@ Modify `config/behat.yml` to have the correct Sauce credentials (`username` and 
 
 Create features, step definitions, as you would with plain-old `behat`.
 
-Run Tests
----------
+Run Tests with Sauce On-Demand
+------------------------------
 
-Behat-Sauce lets you vary the browser/os combination on the command line.
+Behat-Sauce lets you vary the Sauce On-Demand browser/os combination on the command line.
 
 Usage:
 
@@ -41,7 +41,7 @@ Arguments:
      --browser-version      SauceLabs browser version.  Default is:  7
      --os                   SauceLabs operating system.  Default is:  Windows 2003
 
-Start SauceConnect
+Start Sauce Connect
 ------------------
 
 If you need a SauceConnect tunnel to run your tests, you can reuse the credentials you already have in your `config/behat.yml`.
