@@ -1,0 +1,41 @@
+{
+    "name":         "behat/sauce",
+    "description":  "Scenario-oriented BDD framework for use with SauceLabs",
+    "keywords":     ["BDD", "Behat", "SauceLabs", "Sauce"],
+    "homepage":     "http://behat.org/",
+    "type":         "library",
+    "license":      "MIT",
+    "authors":      [
+        {
+            "name":      "Konstantin Kudryashov",
+            "email":     "ever.zet@gmail.com",
+            "homepage":  "http://everzet.com"
+        }
+    ],
+    "require": {
+        "php":                           ">=5.3.1",
+        "behat/behat":                   ">=2.3.0",
+        "behat/gherkin":                 ">=2.1.1,<2.2.0-dev",
+        "behat/mink":                    ">=1.3.0",
+        "symfony/console":               ">=2.0.0,<2.2.0-dev",
+        "symfony/config":                ">=2.0.0,<2.2.0-dev",
+        "symfony/dependency-injection":  ">=2.0.0,<2.2.0-dev",
+        "symfony/event-dispatcher":      ">=2.0.0,<2.2.0-dev",
+        "symfony/translation":           ">=2.0.0,<2.2.0-dev",
+        "symfony/yaml":                  ">=2.0.0,<2.2.0-dev",
+        "symfony/finder":                ">=2.0.0,<2.2.0-dev",
+        "alexandresalome/php-selenium":  "*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Behat\\Sauce": "src/"
+        }
+    },
+    "repositories": {
+        "behat/mink-deps": {
+            "type": "composer",
+            "url":  "behat.org"
+        }
+    },
+    "bin": ["bin/behat-sauce"]
+}
