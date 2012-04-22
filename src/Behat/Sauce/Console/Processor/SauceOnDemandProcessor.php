@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface,
 use Behat\Behat\Console\Processor\ProcessorInterface;
 use Behat\Sauce\Context\Loader\SauceContextLoader;
 
-class SauceProcessor implements ProcessorInterface {
+class SauceOnDemandProcessor implements ProcessorInterface {
     
     public function configure(Command $command) {
         $command

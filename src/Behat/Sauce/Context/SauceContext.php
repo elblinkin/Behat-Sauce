@@ -2,7 +2,8 @@
 
 namespace Behat\Sauce\Context;
 
-use Behat\Behat\Event\ScenarioEvent;
+use Behat\Behat\Event\ScenarioEvent,
+    Behat\Behat\Event\SuiteEvent;
 use Behat\Mink\Behat\Context\BaseMinkContext;
 use Behat\Mink\Mink,
     Behat\Mink\Session,
@@ -13,6 +14,7 @@ use InvalidArgumentException;
 class SauceContext extends BaseMinkContext {
 
     private static $mink;
+
     private $parameters;
 
     public function __construct(
