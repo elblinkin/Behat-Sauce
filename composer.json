@@ -2,14 +2,14 @@
     "name":         "behat/sauce",
     "description":  "Scenario-oriented BDD framework for use with SauceLabs",
     "keywords":     ["BDD", "Behat", "SauceLabs", "Sauce"],
-    "homepage":     "http://behat.org/",
+    "homepage":     "http://github.com/elblinkin/Behat-Sauce",
     "type":         "library",
     "license":      "MIT",
     "authors":      [
         {
-            "name":      "Konstantin Kudryashov",
-            "email":     "ever.zet@gmail.com",
-            "homepage":  "http://everzet.com"
+            "name":      "LB Denker",
+            "email":     "github@elblinkin.info",
+            "homepage":  "http://elblinkin.info"
         }
     ],
     "require": {
