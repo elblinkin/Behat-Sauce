@@ -44,7 +44,7 @@ extends Behat\InitProcessor {
             $output->writeln(
                 sprintf(
                     '<info>+f</info> %sbehat.yml <comment>- place your feature related code here</comment>',
-                    str_replace($base_path, '', $config_path)
+                    str_replace($base_path . DIRECTORY_SEPARATOR, '', $config_path)
                 )
             );
         }

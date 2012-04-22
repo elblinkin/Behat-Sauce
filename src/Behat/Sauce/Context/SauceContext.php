@@ -92,7 +92,7 @@ class SauceContext extends BaseMinkContext {
                 $username,
                 $access_key,
                 ($browser === null) ? $browser : 'firefox',
-                ($browser_version === null) ? $browser_version : '7',
+                ($version === null) ? $version : '7',
                 ($os === null) ? $os : 'Windows 2003',
                 ($name === null) ? $name : 'BeHat-Sauce Test'
             );
