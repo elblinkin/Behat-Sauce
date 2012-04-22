@@ -105,6 +105,7 @@ default:
             username: 'sauce-user'
             access_key: 'access-key'
             base_url: 'http://localhost/'
+            name: 'optional-test-name'
 YAML;
     }
 }

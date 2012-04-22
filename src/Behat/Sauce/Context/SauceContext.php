@@ -79,17 +79,29 @@ class SauceContext extends BaseMinkContext {
             if ($access_key === null) {
                 throw new InvalidArgumentException('Must set "access_key" in behat.yml');
             }
+            $name = $this->getParameter('name');
+            $browser = sprintf(
+                '{
+                    "username": "%s",
+                    "access-key": "%s",
+                    "browser": "%s",
+                    "browser-version": "%s",
+                    "os": "%s",
+                    "name": "%s"
+                }',
+                $username,
+                $access_key,
+                isset($browser) ? $browser : 'firefox',
+                isset($browser_version) ? $browser_version : '7',
+                isset($os) ? $os : 'Windows 2003',
+                isset($name) ? $name : 'BeHat-Sauce Test'
+            );
+
             $mink->registerSession(
                 'selenium',
                 new Session(
                     new SeleniumDriver(
-                        array(
-                            'username' => $username,
-                            'access-key' => $access_key,
-                            'browser' => isset($browser) ? $browser : 'firefox',
-                            'browser-version' => isset($browser_version) ? $browser_version : '7',
-                            'os' => isset($os) ? $os : 'Windows 2003',
-                        ),
+                        $browser,
                         $this->getParameter('base_url'),
                         new SeleniumClient(
                             isset($host) ? $host : 'ondemand.saucelabs.com',
