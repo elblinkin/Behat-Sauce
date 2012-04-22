@@ -48,7 +48,7 @@ If you need a SauceConnect tunnel to run your tests, you can reuse the credentia
 
     bin/behat-sauce --tunnel
 
-Make sure you have satisfied all the requirements needed to run [Sacue Connect](https://saucelabs.com/docs/ondemand/connect) before using.
+Make sure you have satisfied all the requirements needed to run [Sauce Connect](https://saucelabs.com/docs/ondemand/connect) before using.
 
 Copyright
 ---------
