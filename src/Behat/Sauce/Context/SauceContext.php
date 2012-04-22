@@ -8,6 +8,7 @@ use Behat\Mink\Mink,
     Behat\Mink\Session,
     Behat\Mink\Driver\SeleniumDriver;
 use Selenium\Client as SeleniumClient;
+use InvalidArgumentException;
 
 class SauceContext extends BaseMinkContext {
 
@@ -70,13 +71,21 @@ class SauceContext extends BaseMinkContext {
         if (!$mink->hasSession('selenium')) {
         	$host = $this->getParameter('host');
         	$port = $this->getParameter('port');
+        	$username = $this->getParameter('username');
+        	if ($username === null) {
+        		throw new InvalidArgumentException('Must set "username" in behat.yml');
+        	}
+        	$access_key = $this->getParameter('access_key');
+        	if ($access_key === null) {
+        		throw new InvalidArgumentException('Must set "access_key" in behat.yml');
+        	}
         	$mink->registerSession(
         	    'selenium',
         	    new Session(
         	    	new SeleniumDriver(
         	    		array(
-        	    	        'username' => $this->getParameter('username'),
-			                'access-key' => $this->getParameter('access_key'),
+        	    	        'username' => $username,
+			                'access-key' => $access_key,
 			                'browser' => isset($browser) ? $browser : 'firefox',
 			                'browser-version' => isset($browser_version) ? $browser_version : '7',
 			                'os' => isset($os) ? $os : 'Windows 2003',
