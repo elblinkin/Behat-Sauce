@@ -1,5 +1,5 @@
 {
-    "name":         "behat/sauce",
+    "name":         "elblinkin/behat-sauce",
     "description":  "Scenario-oriented BDD framework for use with SauceLabs",
     "keywords":     ["BDD", "Behat", "SauceLabs", "Sauce"],
     "homepage":     "http://github.com/elblinkin/Behat-Sauce",
