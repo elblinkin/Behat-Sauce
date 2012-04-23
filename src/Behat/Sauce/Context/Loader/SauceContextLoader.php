@@ -12,15 +12,18 @@ class SauceContextLoader implements ContextLoaderInterface {
     private $browser;
     private $browser_version;
     private $os;
+    private $local;
 
     public function __construct(
         $browser,
         $browser_version,
-        $os
+        $os,
+        $local
     ) {
         $this->browser = $browser;
         $this->browser_version = $browser_version;
         $this->os = $os;
+        $this->local = $local;
     }
 
     public function supports(ContextInterface $context) {
@@ -31,7 +34,8 @@ class SauceContextLoader implements ContextLoaderInterface {
         $context->initialize(
             $this->browser,
             $this->browser_version,
-            $this->os
+            $this->os,
+            $this->local
         );
     }
 }

@@ -26,7 +26,10 @@ class SauceOnDemandProcessor implements ProcessorInterface {
             ->addOption(
                 '--os', null, InputOption::VALUE_REQUIRED,
                 'SauceLabs operating system.  Default is:  <comment>Windows 2003</comment>'
-            );
+            )
+            ->addOption(
+                '--local', null, InputOption::VALUE_NONE,
+                'Run test locally instead.');
     }
 
     public function process(
@@ -39,7 +42,8 @@ class SauceOnDemandProcessor implements ProcessorInterface {
             new SauceContextLoader(
                 $input->getOption('browser'),
                 $input->getOption('browser-version'),
-                $input->getOption('os')
+                $input->getOption('os'),
+                $input->getOption('local')
             )
         );
     }
