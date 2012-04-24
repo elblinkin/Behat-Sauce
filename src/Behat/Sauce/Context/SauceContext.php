@@ -21,12 +21,18 @@ class SauceContext extends BaseMinkContext {
     private static $mink;
 
     private $parameters;
+    private $browser;
+    private $version;
+    private $os;
     private $local;
 
     public function __construct(
         array $parameters
     ) {
         $this->parameters = $parameters;
+        $this->browser = 'firefox';
+        $this->version = '7';
+        $this->os = 'Windows 2003';
         $this->local = false;
         if (!array_key_exists('show_cmd', $this->parameters)) {
             $this->parameters['show_cmd'] = $this->getDefaultShowCmd();
@@ -76,84 +82,18 @@ class SauceContext extends BaseMinkContext {
         $os,
         $local
     ) {
-        $mink = $this->getMink();
-        $this->local = $local;
-        if (!$mink->hasSession('selenium')) {
-            if ($local) {
-                $this->registerLocalSession($browser);
-            } else {
-                $this->registerSauceSession($browser, $version, $os);
-            }
+        if ($browser !==  null) {
+            $this->browser = $browser;
         }
-    }
-
-    private function registerLocalSession($browser) {
-        $mink = $this->getMink();
-        $host = '127.0.0.1';
-        $port = 4444;
-        $local = $this->getParameter('local');
-        if ($local !== null) {
-            if (array_key_exists('host', $local)) {
-                $host = $local['host'];
-            }
-            if (array_key_exists('port', $local)) {
-                $port = $local['port'];
-            }
+        if ($version !== null) {
+            $this->version = $version;
         }
-        $browser = ($browser !== null) ? $browser : 'firefox';
-        $mink->registerSession(
-            'selenium',
-            new Session(
-                new SeleniumDriver(
-                    $browser,
-                    $this->getParameter('base_url'),
-                    new SeleniumClient($host, $port)
-                )
-            )
-        );
-    }
-
-    private function registerSauceSession(
-        $browser, 
-        $version,
-        $os
-    ) {
-        $mink = $this->getMink();
-        $host = $this->getParameter('host');
-        $port = $this->getParameter('port');
-        $username = $this->getUsername();
-        $access_key = $this->getAccessKey();
-        $name = $this->getParameter('name');
-        $browser = sprintf(
-            '{
-                "username": "%s",
-                "access-key": "%s",
-                "browser": "%s",
-                "browser-version": "%s",
-                "os": "%s",
-                "name": "%s"
-            }',
-            $username,
-            $access_key,
-            ($browser !== null) ? $browser : 'firefox',
-            ($version !== null) ? $version : '7',
-            ($os !== null) ? $os : 'Windows 2003',
-            ($name !== null) ? $name : 'BeHat-Sauce Test'
-        );
-
-        $mink->registerSession(
-            'selenium',
-            new Session(
-                new SeleniumDriver(
-                    $browser,
-                    $this->getParameter('base_url'),
-                    new SeleniumClient(
-                        isset($host) ? $host : 'ondemand.saucelabs.com',
-                        isset($port) ? $port : '80'
-                    )
-                )
-            )
-        );
+        if ($os !== null) {
+            $this->os = $os;
+        }
+        if ($local) {
+            $this->local = $local;
+        }
     }
 
     /**
@@ -164,6 +104,24 @@ class SauceContext extends BaseMinkContext {
         $scenario = $event instanceof ScenarioEvent 
             ? $event->getScenario()
             : $event->getOutline();
+
+        $mink = $this->getMink();
+        $host = $this->getHost();
+        $port = $this->getPort();
+        $username = $this->getUsername();
+        $access_key = $this->getAccessKey();
+        $browser = $this->getBrowser($scenario);
+
+        $mink->registerSession(
+            'selenium',
+            new Session(
+                new SeleniumDriver(
+                    $browser,
+                    $this->getParameter('base_url'),
+                    new SeleniumClient($host, $port)
+                )
+            )
+        );
         
         if ($scenario->hasTag('insulated')) {
             $this->getMink()->stopSessions();
@@ -214,6 +172,36 @@ class SauceContext extends BaseMinkContext {
         self::$mink = null;
     }
 
+    private function getHost() {
+        if ($this->local) {
+            $local = $this->getParameter('local');
+            if ($local !== null) {
+                if (array_key_exists('host', $local)) {
+                    return $local['host'];
+                }
+            }
+            return '127.0.0.1';
+        } else {
+            $host = $this->getParameter('host');
+            return ($host !== null) ? $host : 'ondemand.saucelabs.com';
+        }
+    }
+
+    private function getPort() {
+        if ($this->local) {
+            $local = $this->getParameter('local');
+            if ($local !== null) {
+                if (array_key_exists('port', $local)) {
+                    return $local['port'];
+                }
+            }
+            return 4444;
+         } else {
+            $port = $this->getParameter('port');
+            return ($port !== null) ? $port : '80';
+         }
+    }
+
     private function getUsername() {
         $username = $this->getParameter('username');
         if ($username === null) {
@@ -228,6 +216,29 @@ class SauceContext extends BaseMinkContext {
             throw new InvalidArgumentException('Must set "access_key" in behat.yml');
         }
         return $access_key;
+    }
+
+    private function getBrowser($scenario) {
+        if ($this->local) {
+            return $this->browser;
+        } else {
+            return sprintf(
+                '{
+                    "username": "%s",
+                    "access-key": "%s",
+                    "browser": "%s",
+                    "browser-version": "%s",
+                    "os": "%s",
+                    "name": "%s"
+                }',
+                $this->getUsername(),
+                $this->getAccessKey(),
+                $this->browser,
+                $this->version,
+                $this->os,
+                $scenario->getTitle()
+            );
+        }
     }
 
     private function getSessionId() {
