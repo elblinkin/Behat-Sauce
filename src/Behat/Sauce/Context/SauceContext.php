@@ -4,6 +4,7 @@ namespace Behat\Sauce\Context;
 
 use Behat\Behat\Event\ScenarioEvent,
     Behat\Behat\Event\SuiteEvent;
+use Behat\Gherkin\Node\OutlineNode;
 use Behat\Mink\Behat\Context\BaseMinkContext;
 use Behat\Mink\Mink,
     Behat\Mink\Session,
@@ -101,21 +102,31 @@ class SauceContext extends BaseMinkContext {
             ? $event->getScenario()
             : $event->getOutline();
 
-        if ($scenario->hasTag('insulated')) {
-            $this->getMink()->stopSessions();
-        } else {
-            $this->getMink()->resetSessions();
-        }
-
         $mink = $this->getMink();
         $host = $this->getHost();
         $port = $this->getPort();
         $username = $this->getUsername();
         $access_key = $this->getAccessKey();
-        $browser = $this->getBrowser($scenario);
+
+
+        $title = $scenario->getTitle();
+        if ($scenario instanceof OutlineNode) {
+            $title = sprintf(
+                '%s (%s)',
+                $title,
+                implode(
+                    ", ",
+                    $scenario
+                        ->getExamples()
+                        ->getRow($event->getIteration() + 1)
+                )
+            );
+        }
+
+        $browser = $this->getBrowser($title);
 
         $mink->registerSession(
-            'selenium',
+            $title,
             new Session(
                 new SeleniumDriver(
                     $browser,
@@ -125,7 +136,7 @@ class SauceContext extends BaseMinkContext {
             )
         );
 
-        $this->getMink()->setDefaultSessionName('selenium');
+        $this->getMink()->setDefaultSessionName($title);
     }
 
     /**
@@ -134,16 +145,25 @@ class SauceContext extends BaseMinkContext {
      * @AfterScenario
      */
     public function integrateJobResults($event) {
+        $scenario = $event instanceof ScenarioEvent
+            ? $event->getScenario()
+            : $event->getOutline();
+        if ($scenario->hasTag('insulated')) {
+            $this->getMink()->stopSessions();
+        } else {
+            $this->getMink()->resetSessions();
+        }
+
         if (self::$local) {
             return;
         }
         $result = $event->getResult();
         switch ($result) {
             case self::PASSED:
-                $result = 'true';
-                break;
             case self::PENDING:
             case self::UNDEFINED:
+                $result = 'true';
+                break;
             case self::FAILED:
                 $result = 'false';
                 break;
@@ -216,7 +236,7 @@ class SauceContext extends BaseMinkContext {
         return $access_key;
     }
 
-    private function getBrowser($scenario) {
+    private function getBrowser($title) {
         if (self::$local) {
             return self::$browser;
         } else {
@@ -234,7 +254,7 @@ class SauceContext extends BaseMinkContext {
                 self::$browser,
                 self::$version,
                 self::$os,
-                $scenario->getTitle()
+                $title
             );
         }
     }
