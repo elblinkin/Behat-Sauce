@@ -270,7 +270,8 @@ class SauceContext extends BaseMinkContext {
         return $this->session_id;
     }
 
-    private function getNoLoginJobLink($session_id) {
+    public function getNoLoginJobLink() {
+        $session_id = $this->getSessionId();
         $username = $this->getUsername();
         $access_key = $this->getAccessKey();
         $token = hash_hmac('md5', $session_id, $username.':'.$access_key);
@@ -279,6 +280,10 @@ class SauceContext extends BaseMinkContext {
             $session_id,
             $token
         );
+    }
+
+    public function isLocal() {
+        return self::$local;
     }
 
     private function modifySauceJob($payload, $session_id) {
