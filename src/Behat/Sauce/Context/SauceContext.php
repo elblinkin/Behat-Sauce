@@ -25,6 +25,7 @@ class SauceContext extends BaseMinkContext {
     private static $local = false;
 
     private $parameters;
+    private $session_id;
 
     public function __construct(
         array $parameters
@@ -94,10 +95,9 @@ class SauceContext extends BaseMinkContext {
 
     /**
      * {@inheritDoc}
-     * @BeforeScenario
      */
     public function prepareMinkSessions($event) {
-        $scenario = $event instanceof ScenarioEvent 
+        $scenario = $event instanceof ScenarioEvent
             ? $event->getScenario()
             : $event->getOutline();
 
@@ -154,8 +154,10 @@ class SauceContext extends BaseMinkContext {
             sprintf(
                 '{"passed": %s}',
                 $result
-            )
+            ),
+            $this->getSessionId()
         );
+        $this->session_id = null;
     }
 
     /**
@@ -238,17 +240,30 @@ class SauceContext extends BaseMinkContext {
     }
 
     private function getSessionId() {
-        return $this->getMink()
-            ->getSession()
-            ->getDriver()
-            ->getBrowser()
-            ->getEval('selenium.sessionId');
+        if ($this->session_id === null) {
+            $this->session_id = $this->getMink()
+                ->getSession()
+                ->getDriver()
+                ->getBrowser()
+                ->getEval('selenium.sessionId');
+        }
+        return $this->session_id;
     }
 
-    private function modifySauceJob($payload) {
+    private function getNoLoginJobLink($session_id) {
         $username = $this->getUsername();
         $access_key = $this->getAccessKey();
-        $session_id = $this->getSessionId();
+        $token = hash_hmac('md5', $session_id, $username.':'.$access_key);
+        return sprintf(
+            'https://saucelabs.com/jobs/%s?auth=%s',
+            $session_id,
+            $token
+        );
+    }
+
+    private function modifySauceJob($payload, $session_id) {
+        $username = $this->getUsername();
+        $access_key = $this->getAccessKey();
         $ch = curl_init(
             sprintf(
                 'https://%s:%s@saucelabs.com/rest/v1/%s/jobs/%s',
