@@ -42,6 +42,10 @@ class SauceOnDemandProcessor implements ProcessorInterface {
             'pretty',
             'Behat\Sauce\Formatter\PrettyFormatter'
         );
+        $manager->setFormatterClass(
+            'html',
+            'Behat\Sauce\Formatter\HtmlFormatter'
+        );
         SauceContext::initialize(
             $input->getOption('browser'),
             $input->getOption('browser-version'),

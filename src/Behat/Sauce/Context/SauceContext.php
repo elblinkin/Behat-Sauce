@@ -98,6 +98,7 @@ class SauceContext extends BaseMinkContext {
      * {@inheritDoc}
      */
     public function prepareMinkSessions($event) {
+        $this->session_id = null;
         $scenario = $event instanceof ScenarioEvent
             ? $event->getScenario()
             : $event->getOutline();
@@ -177,7 +178,6 @@ class SauceContext extends BaseMinkContext {
             ),
             $this->getSessionId()
         );
-        $this->session_id = null;
     }
 
     /**
