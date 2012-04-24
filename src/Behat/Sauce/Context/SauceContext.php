@@ -19,21 +19,17 @@ class SauceContext extends BaseMinkContext {
     const FAILED = 4;
 
     private static $mink;
+    private static $browser = 'firefox';
+    private static $version = '7';
+    private static $os = 'Windows 2003';
+    private static $local = false;
 
     private $parameters;
-    private $browser;
-    private $version;
-    private $os;
-    private $local;
 
     public function __construct(
         array $parameters
     ) {
         $this->parameters = $parameters;
-        $this->browser = 'firefox';
-        $this->version = '7';
-        $this->os = 'Windows 2003';
-        $this->local = false;
         if (!array_key_exists('show_cmd', $this->parameters)) {
             $this->parameters['show_cmd'] = $this->getDefaultShowCmd();
         }
@@ -76,23 +72,23 @@ class SauceContext extends BaseMinkContext {
      * @param string|null $os SauceLabs operating system
      * @param bool $local Flag to indicate whether or not to use Sauce
      */
-    public function initialize(
+    public static function initialize(
         $browser,
         $version,
         $os,
         $local
     ) {
         if ($browser !==  null) {
-            $this->browser = $browser;
+            self::$browser = $browser;
         }
         if ($version !== null) {
-            $this->version = $version;
+            self::$version = $version;
         }
         if ($os !== null) {
-            $this->os = $os;
+            self::$os = $os;
         }
         if ($local) {
-            $this->local = $local;
+            self::$local = $local;
         }
     }
 
@@ -104,6 +100,12 @@ class SauceContext extends BaseMinkContext {
         $scenario = $event instanceof ScenarioEvent 
             ? $event->getScenario()
             : $event->getOutline();
+
+        if ($scenario->hasTag('insulated')) {
+            $this->getMink()->stopSessions();
+        } else {
+            $this->getMink()->resetSessions();
+        }
 
         $mink = $this->getMink();
         $host = $this->getHost();
@@ -122,12 +124,6 @@ class SauceContext extends BaseMinkContext {
                 )
             )
         );
-        
-        if ($scenario->hasTag('insulated')) {
-            $this->getMink()->stopSessions();
-        } else {
-            $this->getMink()->resetSessions();
-        }
 
         $this->getMink()->setDefaultSessionName('selenium');
     }
@@ -138,7 +134,7 @@ class SauceContext extends BaseMinkContext {
      * @AfterScenario
      */
     public function integrateJobResults($event) {
-        if ($this->local) {
+        if (self::$local) {
             return;
         }
         $result = $event->getResult();
@@ -173,7 +169,7 @@ class SauceContext extends BaseMinkContext {
     }
 
     private function getHost() {
-        if ($this->local) {
+        if (self::$local) {
             $local = $this->getParameter('local');
             if ($local !== null) {
                 if (array_key_exists('host', $local)) {
@@ -188,7 +184,7 @@ class SauceContext extends BaseMinkContext {
     }
 
     private function getPort() {
-        if ($this->local) {
+        if (self::$local) {
             $local = $this->getParameter('local');
             if ($local !== null) {
                 if (array_key_exists('port', $local)) {
@@ -219,8 +215,8 @@ class SauceContext extends BaseMinkContext {
     }
 
     private function getBrowser($scenario) {
-        if ($this->local) {
-            return $this->browser;
+        if (self::$local) {
+            return self::$browser;
         } else {
             return sprintf(
                 '{
@@ -233,9 +229,9 @@ class SauceContext extends BaseMinkContext {
                 }',
                 $this->getUsername(),
                 $this->getAccessKey(),
-                $this->browser,
-                $this->version,
-                $this->os,
+                self::$browser,
+                self::$version,
+                self::$os,
                 $scenario->getTitle()
             );
         }

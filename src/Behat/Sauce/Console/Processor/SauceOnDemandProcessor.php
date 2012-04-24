@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface,
     Symfony\Component\Console\Output\OutputInterface;
 
 use Behat\Behat\Console\Processor\ProcessorInterface;
-use Behat\Sauce\Context\Loader\SauceContextLoader;
+use Behat\Sauce\Context\SauceContext;
 
 class SauceOnDemandProcessor implements ProcessorInterface {
     
@@ -37,14 +37,11 @@ class SauceOnDemandProcessor implements ProcessorInterface {
         InputInterface $input,
         OutputInterface $output
     ) {
-        $reader = $container->get('behat.context_reader');
-        $reader->addLoader(
-            new SauceContextLoader(
-                $input->getOption('browser'),
-                $input->getOption('browser-version'),
-                $input->getOption('os'),
-                $input->getOption('local')
-            )
+        SauceContext::initialize(
+            $input->getOption('browser'),
+            $input->getOption('browser-version'),
+            $input->getOption('os'),
+            $input->getOption('local')
         );
     }
 }
