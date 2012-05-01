@@ -17,7 +17,8 @@
         "behat/behat":                   ">=2.3.0",
         "behat/gherkin":                 ">=2.1.1,<2.2.0-dev",
         "behat/mink":                    ">=1.3.0",
-        "alexandresalome/php-selenium":  "*"
+        "alexandresalome/php-selenium":  "*",
+        "phpunit/PHPUnit":               ">=3.6.0"
     },
     "autoload": {
         "psr-0": {
@@ -28,6 +29,10 @@
         "behat/mink-deps": {
             "type": "composer",
             "url":  "behat.org"
+        },
+        "phpunit": {
+            "type": "pear",
+            "url":  "pear.phpunit.de"
         }
     },
     "bin": ["bin/behat-sauce"]
