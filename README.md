@@ -6,7 +6,7 @@ Behat-Sauce
 Note on Patches/Pull Requests
 -----------------------------
  
-- Fork the projecthere, master for releases & hotfixes only).
+- Fork the project here, master for releases & hotfixes only).
 - Make your feature addition or bug fix.
 - Commit
 - Send me a pull request.
